@@ -14,13 +14,7 @@ class PhotoViewHolder(
     private val binding: ListItemGalleryBinding,
     private val photoClickListener: PhotoGalleryFragment
 ) : RecyclerView.ViewHolder(binding.root) {
-    init {
-        binding.itemImageView.setOnClickListener {
-            val imageUrl = binding.itemImageView.tag as String
-            val imageTitle = binding.itemImageView.contentDescription as String
-            photoClickListener.onPhotoClicked(imageUrl, imageTitle)
-        }
-    }
+
 
     fun bind(galleryItem: NasaResponse?) {
         galleryItem?.let { item ->
@@ -29,37 +23,41 @@ class PhotoViewHolder(
             binding.itemImageView.load(item.url) {
                 placeholder(R.drawable.earth)
             }
+            binding.itemImageView.setOnClickListener {
+                val hdImageUrl = item.hdUrl ?: item.url  // Use regular URL if HD URL is missing
+                photoClickListener.onPhotoClicked(hdImageUrl, item.title) // Pass HD image URL and title
+            }
         }
     }
-}
 
-class PhotoListAdapter(private val photoClickListener: PhotoGalleryFragment) :
-    PagingDataAdapter<NasaResponse, PhotoViewHolder>(GalleryItemComparator) {
+    class PhotoListAdapter(private val photoClickListener: PhotoGalleryFragment) :
+        PagingDataAdapter<NasaResponse, PhotoViewHolder>(GalleryItemComparator) {
 
-    interface PhotoClickListener {
-        fun onPhotoClicked(imageUrl: String, imageTitle: String)
-    }
-
-    override fun onCreateViewHolder(
-        parent: ViewGroup, viewType: Int
-    ): PhotoViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
-        val binding = ListItemGalleryBinding.inflate(inflater, parent, false)
-        return PhotoViewHolder(binding, photoClickListener)
-    }
-
-    override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.bind(item)
-    }
-
-    object GalleryItemComparator : DiffUtil.ItemCallback<NasaResponse>() {
-        override fun areItemsTheSame(oldItem: NasaResponse, newItem: NasaResponse): Boolean {
-            return oldItem.date == newItem.date
+        interface PhotoClickListener {
+            fun onPhotoClicked(imageUrl: String, imageTitle: String)
         }
 
-        override fun areContentsTheSame(oldItem: NasaResponse, newItem: NasaResponse): Boolean {
-            return oldItem == newItem
+        override fun onCreateViewHolder(
+            parent: ViewGroup, viewType: Int
+        ): PhotoViewHolder {
+            val inflater = LayoutInflater.from(parent.context)
+            val binding = ListItemGalleryBinding.inflate(inflater, parent, false)
+            return PhotoViewHolder(binding, photoClickListener)
+        }
+
+        override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
+            val item = getItem(position)
+            holder.bind(item)
+        }
+
+        object GalleryItemComparator : DiffUtil.ItemCallback<NasaResponse>() {
+            override fun areItemsTheSame(oldItem: NasaResponse, newItem: NasaResponse): Boolean {
+                return oldItem.date == newItem.date
+            }
+
+            override fun areContentsTheSame(oldItem: NasaResponse, newItem: NasaResponse): Boolean {
+                return oldItem == newItem
+            }
         }
     }
 }

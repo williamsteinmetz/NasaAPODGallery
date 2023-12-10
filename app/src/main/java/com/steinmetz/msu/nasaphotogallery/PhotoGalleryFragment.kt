@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.steinmetz.msu.nasaphotogallery.databinding.FragmentPhotoGalleryBinding
 import kotlinx.coroutines.launch
 
-private const val TAG = "PhotoGalleryFragment"
-
 class PhotoGalleryFragment : Fragment() {
     private var _binding: FragmentPhotoGalleryBinding? = null
     private val binding
@@ -35,7 +33,7 @@ class PhotoGalleryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = PhotoListAdapter(this)
+        val adapter = PhotoViewHolder.PhotoListAdapter(this)
 
         binding.photoGrid.layoutManager = GridLayoutManager(context, 3)
         binding.photoGrid.adapter = adapter

@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import coil.load
+import coil.size.ViewSizeResolver
 
 class ImageDisplayFragment : Fragment() {
 
@@ -29,11 +30,18 @@ class ImageDisplayFragment : Fragment() {
 
         // Find views
         val imageView = view.findViewById<ImageView>(R.id.full_image_view)
+        val loadingText: TextView = view.findViewById(R.id.loading_text)
         val titleView = view.findViewById<TextView>(R.id.image_title)
 
         // Set image and title
         imageView.load(imageUrl) {
+            size(ViewSizeResolver(imageView))  // Automatically determines a suitable size
             placeholder(R.drawable.earth) // Placeholder image
+            listener(onSuccess = { _, _ ->
+                // Hide the loading text when the image is successfully loaded
+                loadingText.visibility = View.GONE
+                titleView.visibility = View.VISIBLE
+            })
         }
         titleView.text = imageTitle
     }

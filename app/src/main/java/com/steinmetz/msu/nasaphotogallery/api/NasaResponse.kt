@@ -10,5 +10,5 @@ data class NasaResponse(
     val title: String,
     val url: String,
     @Json(name = "media_type") val mediaType: String?, // "image" or "video"
-    val hdUrl: String?
+    @Json(name = "hdurl") val hdUrl: String?
 )

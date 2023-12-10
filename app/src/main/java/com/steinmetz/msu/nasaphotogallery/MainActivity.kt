@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.steinmetz.msu.nasaphotogallery.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), PhotoListAdapter.PhotoClickListener {
+class MainActivity : AppCompatActivity(), PhotoViewHolder.PhotoListAdapter.PhotoClickListener {
 
     private lateinit var binding: ActivityMainBinding
 
