@@ -9,7 +9,7 @@ import coil.load
 import com.steinmetz.msu.nasaphotogallery.api.NasaResponse
 import com.steinmetz.msu.nasaphotogallery.databinding.ListItemGalleryBinding
 
-
+// PhotoViewHolder: Defines the ViewHolder for a single photo.
 class PhotoViewHolder(
     private val binding: ListItemGalleryBinding,
     private val photoClickListener: PhotoGalleryFragment
@@ -30,13 +30,14 @@ class PhotoViewHolder(
         }
     }
 
+    // PhotoListAdapter: Adapter for the RecyclerView in PhotoGalleryFragment.
     class PhotoListAdapter(private val photoClickListener: PhotoGalleryFragment) :
         PagingDataAdapter<NasaResponse, PhotoViewHolder>(GalleryItemComparator) {
 
         interface PhotoClickListener {
             fun onPhotoClicked(imageUrl: String, imageTitle: String)
         }
-
+        // onCreateViewHolder: Creates new ViewHolder for RecyclerView items.
         override fun onCreateViewHolder(
             parent: ViewGroup, viewType: Int
         ): PhotoViewHolder {
@@ -45,6 +46,7 @@ class PhotoViewHolder(
             return PhotoViewHolder(binding, photoClickListener)
         }
 
+        // onBindViewHolder: Binds data to an existing ViewHolder.
         override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
             val item = getItem(position)
             holder.bind(item)

@@ -10,8 +10,11 @@ import androidx.fragment.app.Fragment
 import coil.load
 import coil.size.ViewSizeResolver
 
+
+// ImageDisplayFragment: A Fragment to display a single image with its title.
 class ImageDisplayFragment : Fragment() {
 
+    // onCreateView: Inflates the layout for this fragment.
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -21,14 +24,15 @@ class ImageDisplayFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_image_display, container, false)
     }
 
+    // onViewCreated: Called after the view is created.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Retrieve arguments
+        // Retrieve and display the image and title passed as arguments.
         val imageUrl = arguments?.getString("IMAGE_URL")
         val imageTitle = arguments?.getString("IMAGE_TITLE")
 
-        // Find views
+        // Load the image and set the title.
         val imageView = view.findViewById<ImageView>(R.id.full_image_view)
         val loadingText: TextView = view.findViewById(R.id.loading_text)
         val titleView = view.findViewById<TextView>(R.id.image_title)

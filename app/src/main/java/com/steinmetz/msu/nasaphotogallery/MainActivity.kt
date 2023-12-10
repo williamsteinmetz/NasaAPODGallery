@@ -4,13 +4,16 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.steinmetz.msu.nasaphotogallery.databinding.ActivityMainBinding
 
+// MainActivity: The main activity that hosts different fragments.
 class MainActivity : AppCompatActivity(), PhotoViewHolder.PhotoListAdapter.PhotoClickListener {
 
     private lateinit var binding: ActivityMainBinding
 
+    // onCreate: Initializes the activity.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        // Set the content view from XML layout.
         setContentView(binding.root)
 
         // Initialize the PhotoGalleryFragment if the activity is newly created
@@ -28,3 +31,9 @@ class MainActivity : AppCompatActivity(), PhotoViewHolder.PhotoListAdapter.Photo
             .commit()
     }
 }
+
+// Fragments (ImageDisplayFragment, PhotoGalleryFragment): Manage UI and user interactions.
+// Activity (MainActivity): Hosts the fragments and handles navigation.
+// ViewModel (PhotoGalleryViewModel): Manages data for the UI.
+// Adapter (PhotoListAdapter): Connects data to RecyclerView for display.
+// Repository (PhotoRepository): Handles data fetching and business logic.

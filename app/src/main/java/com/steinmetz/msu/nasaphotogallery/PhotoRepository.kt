@@ -17,6 +17,7 @@ private const val API_KEY = "vNS0rzNlUN2lTat0AaK25vx6aVUaeiPTe6SM35Hn"
 
 private const val TAG = "PhotoRepository"
 
+// PhotoRepository: Handles data fetching logic, typically from a remote source.
 class PhotoRepository {
     private val nasaApi: NasaApi
 
@@ -31,10 +32,11 @@ class PhotoRepository {
 
 class GalleryPagingSource(private val apiService: NasaApi) : PagingSource<Int, NasaResponse>() {
 
+    // Function to get paged photo data.
     @RequiresApi(Build.VERSION_CODES.O)
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, NasaResponse> {
         val currentPage = params.key ?: 0  // Current page number, starting from 0
-        val totalDays = 100  // Total number of days to fetch
+        val totalDays = 500  // Total number of days to fetch
         val daysPerRequest =
             if (currentPage == 0) 14 else 15  // Number of days to fetch per request
 
@@ -42,6 +44,7 @@ class GalleryPagingSource(private val apiService: NasaApi) : PagingSource<Int, N
         val startDate = if (currentPage == 0) endDate.minusDays(daysPerRequest.toLong())
         else endDate.minusDays(daysPerRequest.toLong()).plusDays(1)
 
+        // Network operations, utilizing Flow data.
         return try {
             val response = apiService.fetchPhoto(API_KEY, startDate.toString(), endDate.toString())
             if (response.isSuccessful && response.body() != null) {

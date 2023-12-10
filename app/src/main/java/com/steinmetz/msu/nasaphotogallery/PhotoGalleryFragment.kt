@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.steinmetz.msu.nasaphotogallery.databinding.FragmentPhotoGalleryBinding
 import kotlinx.coroutines.launch
 
+// PhotoGalleryFragment: A Fragment to display a gallery of photos.
 class PhotoGalleryFragment : Fragment() {
     private var _binding: FragmentPhotoGalleryBinding? = null
     private val binding
@@ -23,6 +24,7 @@ class PhotoGalleryFragment : Fragment() {
     private val nasaGalleryViewModel: PhotoGalleryViewModel by viewModels()
 
 
+    // onCreateView: Inflates the layout for this fragment.
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
@@ -30,11 +32,14 @@ class PhotoGalleryFragment : Fragment() {
         return binding.root
     }
 
+    // onViewCreated: Sets up the RecyclerView and ViewModel.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = PhotoViewHolder.PhotoListAdapter(this)
 
+        // Initialize RecyclerView with a grid layout and adapter.
+        // Fetch data from ViewModel and submit to the adapter.
         binding.photoGrid.layoutManager = GridLayoutManager(context, 3)
         binding.photoGrid.adapter = adapter
 
@@ -42,6 +47,7 @@ class PhotoGalleryFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 nasaGalleryViewModel.galleryItems.collect { pagingData ->
                     adapter.submitData(pagingData)
+                    // Data submitted to adapter
                 }
             }
         }
