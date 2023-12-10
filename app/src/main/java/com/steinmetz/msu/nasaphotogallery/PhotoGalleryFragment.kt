@@ -1,7 +1,6 @@
 package com.steinmetz.msu.nasaphotogallery
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,35 +29,32 @@ class PhotoGalleryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentPhotoGalleryBinding.inflate(inflater, container, false)
-        binding.photoGrid.layoutManager = GridLayoutManager(context, 3)
-        Log.d(TAG, "FragmentPhotoGalleryBinding Set")
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = PhotoListAdapter()
+        val adapter = PhotoListAdapter(this)
 
+        binding.photoGrid.layoutManager = GridLayoutManager(context, 3)
         binding.photoGrid.adapter = adapter
 
         viewLifecycleOwner.lifecycleScope.launch {
-            try {
-                Log.d(TAG, "Inside lifecycleScope.launch")
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    Log.d(TAG, "Inside repeatOnLifecycle")
-                    nasaGalleryViewModel.galleryItems.collect { pagingData ->
-                        Log.d(TAG, "Paging Data: $pagingData")
-                        adapter.submitData(pagingData)
-                        Log.d(TAG, "Inside collect: Data Received")
-                    }
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                nasaGalleryViewModel.galleryItems.collect { pagingData ->
+                    adapter.submitData(pagingData)
                 }
-            } catch (e: Exception) {
-                Log.d(TAG, "EXCEPTION")
-                Log.e(TAG, e.toString())
             }
         }
-        Log.d(TAG, "onViewCreated: Coroutine setup complete")
+    }
+
+    fun onPhotoClicked(imageUrl: String, imageTitle: String) {
+        val fragment = ImageDisplayFragment.newInstance(imageUrl, imageTitle)
+        parentFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     override fun onDestroyView() {

@@ -1,6 +1,5 @@
 package com.steinmetz.msu.nasaphotogallery
 
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
@@ -12,17 +11,14 @@ import com.steinmetz.msu.nasaphotogallery.databinding.ListItemGalleryBinding
 
 
 class PhotoViewHolder(
-    private val binding: ListItemGalleryBinding
+    private val binding: ListItemGalleryBinding,
+    private val photoClickListener: PhotoGalleryFragment
 ) : RecyclerView.ViewHolder(binding.root) {
     init {
         binding.itemImageView.setOnClickListener {
-            // Handle the click event
-            val context = binding.root.context
-            val intent = Intent(context, ImageDisplayActivity::class.java).apply {
-                putExtra("IMAGE_URL", binding.itemImageView.tag as? String)
-                putExtra("IMAGE_TITLE", binding.itemImageView.contentDescription as? String)
-            }
-            context.startActivity(intent)
+            val imageUrl = binding.itemImageView.tag as String
+            val imageTitle = binding.itemImageView.contentDescription as String
+            photoClickListener.onPhotoClicked(imageUrl, imageTitle)
         }
     }
 
@@ -37,13 +33,19 @@ class PhotoViewHolder(
     }
 }
 
-class PhotoListAdapter : PagingDataAdapter<NasaResponse, PhotoViewHolder>(GalleryItemComparator) {
+class PhotoListAdapter(private val photoClickListener: PhotoGalleryFragment) :
+    PagingDataAdapter<NasaResponse, PhotoViewHolder>(GalleryItemComparator) {
+
+    interface PhotoClickListener {
+        fun onPhotoClicked(imageUrl: String, imageTitle: String)
+    }
+
     override fun onCreateViewHolder(
         parent: ViewGroup, viewType: Int
     ): PhotoViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ListItemGalleryBinding.inflate(inflater, parent, false)
-        return PhotoViewHolder(binding)
+        return PhotoViewHolder(binding, photoClickListener)
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
